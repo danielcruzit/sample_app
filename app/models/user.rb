@@ -9,5 +9,5 @@ class User < ApplicationRecord
     uniqueness: true
 
 
-
+    has_secure_password
 end
