@@ -9,5 +9,23 @@ class User < ApplicationRecord
     uniqueness: true
 
     has_secure_password
+
     validates :password, presence: true, length: { minimum: 6 }
+    #validate is as costume verification 
+    validate :check_pwd_confirmation 
+
+    private
+    def check_pwd_confirmation 
+        puts "password_confirmation"
+        puts password_confirmation
+        puts password 
+
+        if password.nil?
+            true
+        elsif password != password_confirmation
+            errors.add(:password_confirmation,"Passwords must match !!") 
+        end
+
+    end
+
 end
