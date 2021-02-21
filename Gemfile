@@ -8,6 +8,8 @@ gem 'rails', '~> 6.1.3'
 
 gem 'solargraph', group: :development
 
+gem 'rufo'
+
 
 gem 'bootstrap-sass', '~> 3.3.6'
 
