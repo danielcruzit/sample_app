@@ -14,17 +14,26 @@ class User < ApplicationRecord
     #validate is as costume verification 
     validate :check_pwd_confirmation 
 
+    def username 
+        name + " | " + email    
+    end
+
+    # Returns the hash digest of the given string.
+    def User.digest(string)
+        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+        BCrypt::Engine.cost
+        BCrypt::Password.create(string, cost: cost)
+     end
+
+
     private
     def check_pwd_confirmation 
-        puts "password_confirmation"
-        puts password_confirmation
-        puts password 
-
         if password.nil?
             true
         elsif password != password_confirmation
             errors.add(:password_confirmation,"Passwords must match !!") 
         end
     end
+
 
 end
