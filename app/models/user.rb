@@ -7,7 +7,7 @@ class User < ApplicationRecord
     validates :email, presence: true, length: { maximum: 255 },
     format: { with: VALID_EMAIL_REGEX },
     uniqueness: true
-
+    validates :phone_number, presence: true 
     has_secure_password
 
     validates :password, presence: true, length: { minimum: 6 }
@@ -25,7 +25,6 @@ class User < ApplicationRecord
         elsif password != password_confirmation
             errors.add(:password_confirmation,"Passwords must match !!") 
         end
-
     end
 
 end
