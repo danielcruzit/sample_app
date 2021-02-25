@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show, :destroy, :edit, :update]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :destroy, :edit, :update,:followers,:following]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy,:followers,:following]
   before_action :correct_user, only: [:edit, :update]
   before_action :logged_admin, only: :destroy
   
@@ -11,11 +11,10 @@ class UsersController < ApplicationController
   end
 
   def show
-      if @user.address.present?
-        @city = @user.address.city  
-      else 
-        @city = "sem abrigo :("
-      end
+      @city= @user.city_address
+      @microposts = @user.microposts.paginate(page: params[:page])
+      @followers_count = @user.followers.count
+      @following_count = @user.following.count
   end
     
   def new
@@ -55,6 +54,26 @@ class UsersController < ApplicationController
      end
   end
    
+  #before action sets users
+  def following
+      @title = "Following"
+      @users = @user.following.paginate(page: params[:page])
+      @followers_count = current_user.followers.count
+      @following_count = current_user.following.count
+      render 'show_follow'
+  end
+
+
+  #before action sets user
+  def followers
+      @title = "Followers"
+      @users = @user.followers.paginate(page: params[:page])
+      @followers_count = current_user.followers.count
+      @following_count = current_user.following.count
+      render 'show_follow'
+  end
+  
+
 
 private
 
@@ -70,14 +89,6 @@ private
     @user = User.find(params[:id])
    end
 
-  # Confirms a logged-in user.
-  def logged_in_user
-     unless logged_in?
-        store_location
-        flash[:danger] = "Please log in."
-        redirect_to login_url
-     end
-  end 
 
   def logged_admin
     redirect_to(root_url) unless current_user.admin?  
